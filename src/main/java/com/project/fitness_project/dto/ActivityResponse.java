@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 public class ActivityResponse {
 
-    private String id;
+    private String activityId;
     private String userId;
     private ActivityType type;
     private Map<String , Object> additionalMetrics;

@@ -1,11 +1,13 @@
 package com.project.fitness_project.security;
 
+import com.project.fitness_project.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.realm.UserDatabaseRealm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +26,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -46,8 +50,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 .toList();
                 }
 
+                CustomUserDetails customUserDetails = new CustomUserDetails(userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User Not Found"))
+                );
+
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userId ,
+                        new UsernamePasswordAuthenticationToken(customUserDetails ,
                                 null,
                                 authorities);
 

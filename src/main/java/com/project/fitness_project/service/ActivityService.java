@@ -6,7 +6,11 @@ import com.project.fitness_project.model.Activity;
 import com.project.fitness_project.model.User;
 import com.project.fitness_project.repository.ActivityRepository;
 import com.project.fitness_project.repository.UserRepository;
+import com.project.fitness_project.security.CustomUserDetails;
+import com.project.fitness_project.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +23,14 @@ public class ActivityService {
 
     public final ActivityRepository activityRepository;
     public final UserRepository userRepository;
+    public final SecurityUtils securityUtils;
 
     public ActivityResponse saveActivities(ActivityRequest request) {
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("Invalid User Id : " + request.getUserId()));
+        String userId = securityUtils.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Invalid User Id : " + userId));
 
         Activity activity = Activity.builder()
                 .type(request.getType())
@@ -44,7 +51,7 @@ public class ActivityService {
     private ActivityResponse mapToResponse(Activity activity) {
         ActivityResponse response =
                 ActivityResponse.builder()
-                        .id(activity.getId())
+                        .activityId(activity.getId())
                         .userId(activity.getUser().getId())
                         .type(activity.getType())
                         .additionalMetrics(activity.getAdditionalMetrics())
@@ -59,7 +66,11 @@ public class ActivityService {
 
     }
 
-    public List<ActivityResponse> getAllActivitiesById(String userId) {
+    public List<ActivityResponse> getAllActivitiesById() {
+
+        String userId = securityUtils.getCurrentUserId();
+
+
         List<Activity> allActivities  = activityRepository.findByUserId(userId);
 
 //        List<ActivityResponse> activityResponseList = new ArrayList<>();

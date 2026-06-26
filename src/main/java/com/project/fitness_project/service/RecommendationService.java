@@ -10,7 +10,12 @@ import com.project.fitness_project.model.User;
 import com.project.fitness_project.repository.ActivityRepository;
 import com.project.fitness_project.repository.RecommendationRepository;
 import com.project.fitness_project.repository.UserRepository;
+import com.project.fitness_project.security.CustomUserDetails;
+import com.project.fitness_project.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +28,20 @@ public class RecommendationService {
     public final RecommendationRepository recommendationRepository;
     public final UserRepository userRepository;
     public final ActivityRepository activityRepository;
+    public final SecurityUtils securityUtils;
+
 
     public RecommendationResponse generateRecommendation(RecommendationRequest request) {
-        User user = userRepository.findById(request.getUserId())
+
+        String userId = securityUtils.getCurrentUserId();
+
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Invalid UserId"));
         Activity activity = activityRepository.findById(request.getActivityId())
                 .orElseThrow(() -> new RuntimeException("Invalid ActivityId"));
+
+        securityUtils.isActivityBelongsToCurrentUser(activity,userId);
+
 
         Recommendation recommendation = Recommendation.builder()
                 .improvements(request.getImprovements())
@@ -89,10 +102,14 @@ public class RecommendationService {
         return response;
     }
 
-    public List<UserRecommendationResponse> getUserRecommendations(String userId) {
+    public List<UserRecommendationResponse> getUserRecommendations() {
+
+        String userId = securityUtils.getCurrentUserId();
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Invalid UserId : " + userId));
+
+
 
         List<Recommendation> userRecomendations = recommendationRepository.findByUserId(userId);
 
@@ -102,8 +119,15 @@ public class RecommendationService {
     }
 
     public List<ActivityRecommendationResponse> getActivityRecommendations(String activityId) {
+
+        String userId = securityUtils.getCurrentUserId();
+
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new RuntimeException("Invalide ActivityId"));
+
+
+
+        securityUtils.isActivityBelongsToCurrentUser(activity,userId);
 
         List<Recommendation> activityRecommendations = recommendationRepository.findByActivityId(activityId);
 

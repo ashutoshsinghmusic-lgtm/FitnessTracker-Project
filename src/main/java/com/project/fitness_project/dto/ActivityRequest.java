@@ -14,7 +14,6 @@ import java.util.Map;
 
 public class ActivityRequest {
 
-    private String userId;
     private ActivityType type;
     private Integer duration;
     private Integer caloriesBurned;
