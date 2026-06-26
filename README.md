@@ -57,7 +57,7 @@ Request and Response DTOs are kept separate from the underlying entities to keep
 | POST | `/api/activities` | Log a new fitness activity |
 | GET | `/api/activities` | Retrieve all activities for a user |
 | POST | `/api/recommendation/generate` | Generate a new recommendation for an activity |
-| GET | `/api/recommendation/user/{userId}` | Get all recommendations for a user |
+| GET | `/api/recommendation/user` | Get all recommendations for a user |
 | GET | `/api/recommendation/activity/{activityId}` | Get recommendations for a specific activity |
 
 ## Environment Variables
