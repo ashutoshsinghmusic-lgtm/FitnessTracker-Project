@@ -3,12 +3,16 @@ package com.project.fitness_project.service;
 import com.project.fitness_project.dto.LoginRequest;
 import com.project.fitness_project.dto.RegisterRequestDTO;
 import com.project.fitness_project.dto.RegisterResponse;
+import com.project.fitness_project.exceptionHandler.DuplicateResourceException;
 import com.project.fitness_project.model.User;
 import com.project.fitness_project.model.UserRole;
 import com.project.fitness_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,12 @@ public class UserService {
           if(request.getRole() != null)
               role = request.getRole();
 
+        if(userRepository.existsByEmail(request.getEmail())){
+            throw new DuplicateResourceException(
+                    "Email already exists."
+            );
+        }
+
           User user = User.builder()
                           .firstName(request.getFirstName())
                           .lastName(request.getLastName())
@@ -32,21 +42,6 @@ public class UserService {
                           .role(role)
                   .build();
 
-//        User user = new User(
-//                null,
-//                request.getEmail(),
-//                request.getPassword(),
-//                request.getFirstName(),
-//                request.getLastName (),
-//                Instant.parse( "2025-12-08T14:49:41.208Z")
-//                        .atZone(ZoneOffset. UTC)
-//                        . toLocalDateTime(),
-//                Instant.parse("2025-12-08T14:49:41.208Z")
-//                        .atZone (ZoneOffset. UTC)
-//                        .toLocalDateTime (),
-//                List.of(),
-//                List.of()
-//        );
         User savedUser =  userRepository.save(user);
 
         return mapToResponse(savedUser);
@@ -64,14 +59,6 @@ public class UserService {
                                 .updatedDate(savedUser.getUpdatedDate())
                         .build();
 
-
-
-//        response.setId(savedUser.getId());
-//        response.setEmail(savedUser.getEmail());
-//        response.setFirstName(savedUser.getFirstName());
-//        response.setLastName(savedUser.getLastName());
-//        response.setStatus("Successfully Registered");
-
         return response;
     }
 
@@ -80,15 +67,15 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User authenticate(LoginRequest loginRequest) {
+    public User authenticate(LoginRequest loginRequest) throws AuthenticationException {
         User user = findByEmail(loginRequest.getEmail());
 
         if(user == null){
-            throw new RuntimeException("User Can not be Empty");
+            throw new UsernameNotFoundException("User Can not be Empty");
         }
 
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new RuntimeException("Incorrect Password");
+            throw new AuthenticationException("Incorrect Password");
         }
 
         return user;

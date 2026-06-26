@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,8 +45,6 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication;
 
-        try{
-
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -53,10 +52,6 @@ public class AuthController {
                     )
             );
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.status(401).build();
-            }
 
 //            User user = userService.authenticate(loginRequest);
 //            String token = jwtUtils.generateToken(user.getId() , user.getRole().name());

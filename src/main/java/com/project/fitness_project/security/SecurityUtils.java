@@ -4,7 +4,8 @@ import com.project.fitness_project.model.Activity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
+import org.springframework.security.access.AccessDeniedException;
 
 @Component
 public class SecurityUtils {
@@ -21,10 +22,10 @@ public class SecurityUtils {
     }
 
 
-    public boolean isActivityBelongsToCurrentUser(Activity activity , String userId){
+    public boolean isActivityBelongsToCurrentUser(Activity activity , String userId) throws AccessDeniedException {
 
        if(!userId.equals(activity.getUser().getId())){
-           throw new RuntimeException("This activity dose not belong to you");
+           throw new AccessDeniedException("This activity dose not belong to you");
         }
 
        return true;

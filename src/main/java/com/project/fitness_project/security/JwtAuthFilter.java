@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -51,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
 
                 CustomUserDetails customUserDetails = new CustomUserDetails(userRepository.findById(userId)
-                        .orElseThrow(() -> new RuntimeException("User Not Found"))
+                        .orElseThrow(() -> new UsernameNotFoundException("User Not Found : " + userId))
                 );
 
                 UsernamePasswordAuthenticationToken authenticationToken =

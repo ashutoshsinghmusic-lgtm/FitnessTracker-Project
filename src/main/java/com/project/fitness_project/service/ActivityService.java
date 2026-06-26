@@ -6,14 +6,11 @@ import com.project.fitness_project.model.Activity;
 import com.project.fitness_project.model.User;
 import com.project.fitness_project.repository.ActivityRepository;
 import com.project.fitness_project.repository.UserRepository;
-import com.project.fitness_project.security.CustomUserDetails;
 import com.project.fitness_project.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +27,7 @@ public class ActivityService {
         String userId = securityUtils.getCurrentUserId();
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Invalid User Id : " + userId));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid User Id : " + userId));
 
         Activity activity = Activity.builder()
                 .type(request.getType())

@@ -10,14 +10,11 @@ import com.project.fitness_project.model.User;
 import com.project.fitness_project.repository.ActivityRepository;
 import com.project.fitness_project.repository.RecommendationRepository;
 import com.project.fitness_project.repository.UserRepository;
-import com.project.fitness_project.security.CustomUserDetails;
 import com.project.fitness_project.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +28,14 @@ public class RecommendationService {
     public final SecurityUtils securityUtils;
 
 
-    public RecommendationResponse generateRecommendation(RecommendationRequest request) {
+    public RecommendationResponse generateRecommendation(RecommendationRequest request) throws AccessDeniedException {
 
         String userId = securityUtils.getCurrentUserId();
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Invalid UserId"));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid UserId : " + userId));
         Activity activity = activityRepository.findById(request.getActivityId())
-                .orElseThrow(() -> new RuntimeException("Invalid ActivityId"));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid ActivityId " + request.getActivityId()));
 
         securityUtils.isActivityBelongsToCurrentUser(activity,userId);
 
@@ -59,6 +56,7 @@ public class RecommendationService {
     private RecommendationResponse mapToRecommendationResponse(Recommendation savedRecommendation) {
 
         RecommendationResponse response = RecommendationResponse.builder()
+                .activityId(savedRecommendation.getActivity().getId())
                 .improvements(savedRecommendation.getImprovements())
                 .updatedAt(savedRecommendation.getUpdatedAt())
                 .userId(savedRecommendation.getUser().getId())
@@ -91,6 +89,7 @@ public class RecommendationService {
     private ActivityRecommendationResponse mapToActivityRecommendationResponse(Recommendation savedRecommendation) {
 
         ActivityRecommendationResponse response = ActivityRecommendationResponse.builder()
+                .activityId(savedRecommendation.getActivity().getId())
                 .improvements(savedRecommendation.getImprovements())
                 .updatedAt(savedRecommendation.getUpdatedAt())
                 .suggestions(savedRecommendation.getSuggestions())
@@ -107,7 +106,7 @@ public class RecommendationService {
         String userId = securityUtils.getCurrentUserId();
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Invalid UserId : " + userId));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid UserId : " + userId));
 
 
 
@@ -118,12 +117,12 @@ public class RecommendationService {
                 .collect(Collectors.toList());
     }
 
-    public List<ActivityRecommendationResponse> getActivityRecommendations(String activityId) {
+    public List<ActivityRecommendationResponse> getActivityRecommendations(String activityId) throws AccessDeniedException {
 
         String userId = securityUtils.getCurrentUserId();
 
         Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new RuntimeException("Invalide ActivityId"));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalide ActivityId : "+ activityId));
 
 
 

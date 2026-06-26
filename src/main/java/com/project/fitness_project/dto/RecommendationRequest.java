@@ -14,12 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class RecommendationRequest {
 
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "Please enter a activity id")
     private String activityId;
 
     private List<String> improvements;
-    @NotBlank
+    @NotNull(message = "Enter Suggestion")
     private List<String> suggestions;
     private List<String> safety;
 

@@ -18,14 +18,13 @@ import java.util.Map;
 @AllArgsConstructor
 
 public class ActivityRequest {
-
-    @NotBlank
+    @NotNull(message = "Activity type is required")
     private ActivityType type;
 
-    @Positive
+    @Positive(message = "Duration must be positive")
     private Integer duration;
 
-    @PositiveOrZero
+    @PositiveOrZero(message = "caloriesBruned can not be negative")
     private Integer caloriesBurned;
 
     @NotNull

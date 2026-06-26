@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class RecommendationController {
     public final RecommendationService recommendationService;
 
     @PostMapping("/generate")
-    public ResponseEntity<RecommendationResponse> generateRecommendation(@Valid @RequestBody RecommendationRequest request){
+    public ResponseEntity<RecommendationResponse> generateRecommendation(@Valid @RequestBody RecommendationRequest request) throws AccessDeniedException {
         RecommendationResponse recommendationResponse = recommendationService.generateRecommendation(request);
         return ResponseEntity.ok(recommendationResponse);
     }
@@ -35,7 +36,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/activity/{activityId}")
-    public ResponseEntity<List<ActivityRecommendationResponse>> getActivityRecommendations(@PathVariable String activityId){
+    public ResponseEntity<List<ActivityRecommendationResponse>> getActivityRecommendations(@PathVariable String activityId) throws AccessDeniedException {
         List<ActivityRecommendationResponse> activityRecommendationsResponseList =
                 recommendationService.getActivityRecommendations(activityId);
 
