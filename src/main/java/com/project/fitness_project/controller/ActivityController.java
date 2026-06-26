@@ -3,6 +3,7 @@ package com.project.fitness_project.controller;
 import com.project.fitness_project.dto.ActivityRequest;
 import com.project.fitness_project.dto.ActivityResponse;
 import com.project.fitness_project.service.ActivityService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ActivityController {
     public final ActivityService activityService;
 
     @PostMapping
-    public ResponseEntity<ActivityResponse> saveActivities(@RequestBody ActivityRequest request){
+    public ResponseEntity<ActivityResponse> saveActivities(@Valid @RequestBody ActivityRequest request){
         ActivityResponse response =  activityService.saveActivities(request);
         return ResponseEntity.ok(response);
     }

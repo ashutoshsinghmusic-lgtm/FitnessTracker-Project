@@ -41,7 +41,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication;
 
         try{
