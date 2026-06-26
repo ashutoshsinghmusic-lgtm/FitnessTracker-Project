@@ -56,7 +56,7 @@ Request and Response DTOs are kept separate from the underlying entities to keep
 | POST | `/api/auth/login` | Authenticate and receive a JWT token |
 | POST | `/api/activities` | Log a new fitness activity |
 | GET | `/api/activities` | Retrieve all activities for a user |
-| POST | `/api/recommendation/generate` | Generate a new recommendation for an activity |
+| POST | `/api/recommendation/generate` | Generate a new recommendation for a sepcific acitvity for logged in user |
 | GET | `/api/recommendation/user` | Get all recommendations for a user |
 | GET | `/api/recommendation/activity/{activityId}` | Get recommendations for a specific activity |
 
@@ -69,6 +69,7 @@ DB_URL=<your-database-url>
 DB_USERNAME=<your-database-username>
 DB_PASSWORD=<your-database-password>
 JWT_SECRET=<your-jwt-secret-key>
+JWT_EXPIRATION_TIME=<your-jwt-token-expiration-time>
 ```
 
 ## Running Locally
