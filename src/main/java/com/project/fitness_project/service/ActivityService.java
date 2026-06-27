@@ -3,8 +3,10 @@ package com.project.fitness_project.service;
 import com.project.fitness_project.dto.ActivityRequest;
 import com.project.fitness_project.dto.ActivityResponse;
 import com.project.fitness_project.model.Activity;
+import com.project.fitness_project.model.Recommendation;
 import com.project.fitness_project.model.User;
 import com.project.fitness_project.repository.ActivityRepository;
+import com.project.fitness_project.repository.RecommendationRepository;
 import com.project.fitness_project.repository.UserRepository;
 import com.project.fitness_project.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,8 @@ public class ActivityService {
     public final ActivityRepository activityRepository;
     public final UserRepository userRepository;
     public final SecurityUtils securityUtils;
+    public final RecommendationRepository recommendationRepository;
+    public final GeminiService geminiService;
 
     public ActivityResponse saveActivities(ActivityRequest request) {
 
@@ -40,6 +45,25 @@ public class ActivityService {
 
 
         Activity savedActivity = activityRepository.save(activity);
+
+
+        try {
+            Map<String, List<String>> geminiResult = geminiService.generateRecommendation(savedActivity);
+
+            Recommendation recommendation = Recommendation.builder()
+                    .improvements(geminiResult.get("improvements"))
+                    .suggestions(geminiResult.get("suggestions"))
+                    .safety(geminiResult.get("safety"))
+                    .user(user)
+                    .activity(savedActivity)
+                    .build();
+
+            recommendationRepository.save(recommendation);
+
+        } catch (Exception e) {
+
+            System.out.println("AI Recommendation generate nahi ho payi: " + e.getMessage());
+        }
 
 
         return mapToResponse(savedActivity);

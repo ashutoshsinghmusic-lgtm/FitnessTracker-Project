@@ -1,8 +1,6 @@
 package com.project.fitness_project.service;
 
 import com.project.fitness_project.dto.ActivityRecommendationResponse;
-import com.project.fitness_project.dto.RecommendationRequest;
-import com.project.fitness_project.dto.RecommendationResponse;
 import com.project.fitness_project.dto.UserRecommendationResponse;
 import com.project.fitness_project.model.Activity;
 import com.project.fitness_project.model.Recommendation;
@@ -28,47 +26,47 @@ public class RecommendationService {
     public final SecurityUtils securityUtils;
 
 
-    public RecommendationResponse generateRecommendation(RecommendationRequest request) throws AccessDeniedException {
+//    public RecommendationResponse generateRecommendation(RecommendationRequest request) throws AccessDeniedException {
+//
+//        String userId = securityUtils.getCurrentUserId();
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new UsernameNotFoundException("Invalid UserId : " + userId));
+//        Activity activity = activityRepository.findById(request.getActivityId())
+//                .orElseThrow(() -> new UsernameNotFoundException("Invalid ActivityId " + request.getActivityId()));
+//
+//        securityUtils.isActivityBelongsToCurrentUser(activity,userId);
+//
+//
+//        Recommendation recommendation = Recommendation.builder()
+//                .improvements(request.getImprovements())
+//                .safety(request.getSafety())
+//                .suggestions(request.getSuggestions())
+//                .user(user)
+//                .activity(activity)
+//                .build();
+//
+//        Recommendation savedRecommendation = recommendationRepository.save(recommendation);
+//
+//        return mapToRecommendationResponse(savedRecommendation);
+//    }
 
-        String userId = securityUtils.getCurrentUserId();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid UserId : " + userId));
-        Activity activity = activityRepository.findById(request.getActivityId())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid ActivityId " + request.getActivityId()));
-
-        securityUtils.isActivityBelongsToCurrentUser(activity,userId);
-
-
-        Recommendation recommendation = Recommendation.builder()
-                .improvements(request.getImprovements())
-                .safety(request.getSafety())
-                .suggestions(request.getSuggestions())
-                .user(user)
-                .activity(activity)
-                .build();
-
-        Recommendation savedRecommendation = recommendationRepository.save(recommendation);
-
-        return mapToRecommendationResponse(savedRecommendation);
-    }
-
-    private RecommendationResponse mapToRecommendationResponse(Recommendation savedRecommendation) {
-
-        RecommendationResponse response = RecommendationResponse.builder()
-                .activityId(savedRecommendation.getActivity().getId())
-                .improvements(savedRecommendation.getImprovements())
-                .updatedAt(savedRecommendation.getUpdatedAt())
-                .userId(savedRecommendation.getUser().getId())
-                .suggestions(savedRecommendation.getSuggestions())
-                .safety(savedRecommendation.getSafety())
-                .createdAt(savedRecommendation.getCreatedAt())
-                .activityId(savedRecommendation.getActivity().getId())
-                .build();
-
-
-        return response;
-    }
+//    private RecommendationResponse mapToRecommendationResponse(Recommendation savedRecommendation) {
+//
+//        RecommendationResponse response = RecommendationResponse.builder()
+//                .activityId(savedRecommendation.getActivity().getId())
+//                .improvements(savedRecommendation.getImprovements())
+//                .updatedAt(savedRecommendation.getUpdatedAt())
+//                .userId(savedRecommendation.getUser().getId())
+//                .suggestions(savedRecommendation.getSuggestions())
+//                .safety(savedRecommendation.getSafety())
+//                .createdAt(savedRecommendation.getCreatedAt())
+//                .activityId(savedRecommendation.getActivity().getId())
+//                .build();
+//
+//
+//        return response;
+//    }
 
     private UserRecommendationResponse mapToUserRecommendationResponse(Recommendation savedRecommendation) {
 

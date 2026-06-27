@@ -1,11 +1,8 @@
 package com.project.fitness_project.controller;
 
 import com.project.fitness_project.dto.ActivityRecommendationResponse;
-import com.project.fitness_project.dto.RecommendationRequest;
-import com.project.fitness_project.dto.RecommendationResponse;
 import com.project.fitness_project.dto.UserRecommendationResponse;
 import com.project.fitness_project.service.RecommendationService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +15,6 @@ import java.util.List;
 public class RecommendationController {
 
     public final RecommendationService recommendationService;
-
-    @PostMapping("/generate")
-    public ResponseEntity<RecommendationResponse> generateRecommendation(@Valid @RequestBody RecommendationRequest request) {
-        RecommendationResponse recommendationResponse = recommendationService.generateRecommendation(request);
-        return ResponseEntity.ok(recommendationResponse);
-    }
 
     @GetMapping("/user")
     public ResponseEntity<List<UserRecommendationResponse>> getUserRecommendations(){
