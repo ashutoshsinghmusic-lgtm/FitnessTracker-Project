@@ -20,8 +20,7 @@ A Spring Boot REST API for tracking fitness activities recommendations, built wi
 
 - **User Authentication & Authorization** — Secure registration and login using Spring Security and JWT tokens
 - **Activity Tracking** — Log fitness activities (Running, Cycling, Yoga, HIIT, Swimming, and more) with duration, calories burned, and custom metrics
-- **AI-Powered Recommendations** — Generates personalized improvement, suggestion, and safety insights based on logged activities
-- **API Documentation** — Interactive API docs via Swagger/OpenAPI
+- **API Documentation** — Interactive API docs via Swagger
 - **Role-Based Access** — Supports USER and ADMIN roles
 
 ## Tech Stack
@@ -31,7 +30,7 @@ A Spring Boot REST API for tracking fitness activities recommendations, built wi
 - **Security:** Spring Security, JWT
 - **Persistence:** Spring Data JPA, Hibernate
 - **Database:** Neon (PostgreSQL)
-- **Documentation:** Swagger / OpenAPI
+- **Documentation:** Swagger 
 - **Deployment:** Render
 
 ## Architecture
