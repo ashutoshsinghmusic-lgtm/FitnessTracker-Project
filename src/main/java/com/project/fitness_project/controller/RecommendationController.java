@@ -6,12 +6,10 @@ import com.project.fitness_project.dto.RecommendationResponse;
 import com.project.fitness_project.dto.UserRecommendationResponse;
 import com.project.fitness_project.service.RecommendationService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -22,7 +20,7 @@ public class RecommendationController {
     public final RecommendationService recommendationService;
 
     @PostMapping("/generate")
-    public ResponseEntity<RecommendationResponse> generateRecommendation(@Valid @RequestBody RecommendationRequest request) throws AccessDeniedException {
+    public ResponseEntity<RecommendationResponse> generateRecommendation(@Valid @RequestBody RecommendationRequest request) {
         RecommendationResponse recommendationResponse = recommendationService.generateRecommendation(request);
         return ResponseEntity.ok(recommendationResponse);
     }
@@ -36,7 +34,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/activity/{activityId}")
-    public ResponseEntity<List<ActivityRecommendationResponse>> getActivityRecommendations(@PathVariable String activityId) throws AccessDeniedException {
+    public ResponseEntity<List<ActivityRecommendationResponse>> getActivityRecommendations(@PathVariable String activityId) {
         List<ActivityRecommendationResponse> activityRecommendationsResponseList =
                 recommendationService.getActivityRecommendations(activityId);
 

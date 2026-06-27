@@ -8,11 +8,12 @@ import com.project.fitness_project.model.User;
 import com.project.fitness_project.model.UserRole;
 import com.project.fitness_project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
+
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +68,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User authenticate(LoginRequest loginRequest) throws AuthenticationException {
+    public User authenticate(LoginRequest loginRequest) {
         User user = findByEmail(loginRequest.getEmail());
 
         if(user == null){
@@ -75,7 +76,7 @@ public class UserService {
         }
 
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new AuthenticationException("Incorrect Password");
+            throw new BadCredentialsException("Incorrect Password");
         }
 
         return user;
