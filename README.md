@@ -84,7 +84,7 @@ GEMINI_API_KEY=<your-google-gemini-api-key>
 
 1. Clone the repository
    ```
-   git clone https://github.com/ashutoshsinghmusic-lgtm/Fitness-Tracker.git
+   git clone https://github.com/justashutoshsingh/Fitness-Tracker.git
    ```
 2. Set the environment variables listed above
 3. Run the application
@@ -96,4 +96,4 @@ GEMINI_API_KEY=<your-google-gemini-api-key>
 ## Author
 
 Ashutosh Singh
-[GitHub](https://github.com/ashutoshsinghmusic-lgtm)
+[GitHub](https://github.com/justashutoshsingh)
